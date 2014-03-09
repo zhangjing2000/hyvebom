@@ -7,8 +7,8 @@ import java.util.UUID;
 public interface HyveProductGroup {
 	UUID getGroupID();
 	String getGroupName();
-	HyveProductGroupType getGroupType();
+	GroupType getGroupType();
 	SortedSet<HyveProductGroupDetail> getGroupDetails();
-	Map<HyveProductGroupTagType, String> getGroupTags();
-	String getTagValue(HyveProductGroupTagType tagType);
+	Map<TagType, String> getGroupTags();
+	String getTagValue(TagType tagType);
 }

@@ -3,33 +3,29 @@ package com.hyve.bom.log;
 import java.util.Date;
 import java.util.UUID;
 
-import com.hyve.bom.concept.HyveProductGroupTagType;
+import com.hyve.bom.concept.TagType;
 
-public class HyveGroupTagLog extends HyveGroupChangeLog {
+class HyveGroupTagLog extends HyveGroupChangeLog {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	public HyveGroupTagLog(UUID logGroupID, int logUserID, Date logDate,
+	HyveGroupTagLog(UUID logGroupID, int logUserID, Date logDate,
 			GroupChangeLogType logType, String logComment,
-			HyveProductGroupTagType tagType, String tagValue) {
+			TagType tagType, String tagValue) {
 		super(logGroupID, logUserID, logDate, logType, logComment);
 		this.tagType = tagType;
 		this.tagValue = tagValue;
 	}
 	
-	private HyveProductGroupTagType tagType;
+	private TagType tagType;
 	private String tagValue;
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-	
-	public HyveProductGroupTagType getTagType() {
+	TagType getTagType() {
 		return tagType;
 	}
 	
-	public String getTagValue() {
+	String getTagValue() {
 		return tagValue;
 	}
 }

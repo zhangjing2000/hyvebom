@@ -20,9 +20,9 @@ import com.hyve.bom.concept.HyveAlternativeGroupDetail;
 import com.hyve.bom.concept.HyveAssemblyGroupDetail;
 import com.hyve.bom.concept.HyveProductGroup;
 import com.hyve.bom.concept.HyveProductGroupDetail;
-import com.hyve.bom.concept.HyveProductGroupMemberType;
-import com.hyve.bom.concept.HyveProductGroupTagType;
-import com.hyve.bom.concept.HyveProductGroupType;
+import com.hyve.bom.concept.MemberType;
+import com.hyve.bom.concept.TagType;
+import com.hyve.bom.concept.GroupType;
 import com.hyve.bom.log.HyveProductGroupLog;
 
 public class HyveProductGroupLogTest {
@@ -51,8 +51,8 @@ public class HyveProductGroupLogTest {
 
 	@Before
 	public void setUp() throws Exception {
-		ash13Server = new HyveProductGroupLog(entryID, entryDate, "Init Test", HyveProductGroupType.ASSEMBLY, serverGroupName);
-		cables = new HyveProductGroupLog(entryID, entryDate, "Init Test", HyveProductGroupType.ALTERNATIVE, cableGroupName);
+		ash13Server = new HyveProductGroupLog(entryID, entryDate, "Init Test", GroupType.ASSEMBLY, serverGroupName);
+		cables = new HyveProductGroupLog(entryID, entryDate, "Init Test", GroupType.ALTERNATIVE, cableGroupName);
 	}
 
 	@After
@@ -61,7 +61,7 @@ public class HyveProductGroupLogTest {
 
 	@Test
 	public void testHyveProductGroupLog() {
-		HyveProductGroup ash13Rack = new HyveProductGroupLog(entryID, entryDate, "Init Rack Test", HyveProductGroupType.ASSEMBLY, rackGroupName);
+		HyveProductGroup ash13Rack = new HyveProductGroupLog(entryID, entryDate, "Init Rack Test", GroupType.ASSEMBLY, rackGroupName);
 		assertNotNull(ash13Rack);
 	}
 
@@ -82,25 +82,25 @@ public class HyveProductGroupLogTest {
 
 	@Test
 	public void testGetAssemblyGroupType() {
-		HyveProductGroupType testGroupType = ash13Server.getGroupType();
+		GroupType testGroupType = ash13Server.getGroupType();
 		System.out.println("testGroupType:" + testGroupType);
 		assertNotNull(testGroupType);
-		assertEquals(testGroupType, HyveProductGroupType.ASSEMBLY);
+		assertEquals(testGroupType, GroupType.ASSEMBLY);
 	}
 
 	@Test
 	public void testGetAlternateGroupType() {
-		HyveProductGroupType testGroupType = cables.getGroupType();
+		GroupType testGroupType = cables.getGroupType();
 		System.out.println("testGroupType:" + testGroupType);
 		assertNotNull(testGroupType);
-		assertEquals(testGroupType, HyveProductGroupType.ALTERNATIVE);
+		assertEquals(testGroupType, GroupType.ALTERNATIVE);
 	}
 
 	@Test
 	public void testGetAnAssemblyGroupDetailLine() {
-		HyveProductGroupLog ash13Rack = new HyveProductGroupLog(entryID, entryDate, "Init Rack Test", HyveProductGroupType.ASSEMBLY, rackGroupName);
+		HyveProductGroupLog ash13Rack = new HyveProductGroupLog(entryID, entryDate, "Init Rack Test", GroupType.ASSEMBLY, rackGroupName);
 		ash13Rack.addGroupDetail(entryID, entryDate, "test add server", 1, 
-				HyveProductGroupMemberType.ASSEMBLY_SUB_GROUP, "ASH 13 server", ash13Server.getGroupID(), 0, 10, 10);
+				MemberType.ASSEMBLY_SUB_GROUP, "ASH 13 server", ash13Server.getGroupID(), 0, 10, 10);
 		SortedSet<HyveProductGroupDetail> details = ash13Rack.getGroupDetails(); 
 		assertNotNull(details);
 		assertTrue(details.size()==1);
@@ -112,11 +112,11 @@ public class HyveProductGroupLogTest {
 
 	@Test
 	public void testGetAnAlternativeGroupDetailLine() {
-		HyveProductGroupLog ash13Rack = new HyveProductGroupLog(entryID, entryDate, "Init Rack Test", HyveProductGroupType.ASSEMBLY, rackGroupName);
+		HyveProductGroupLog ash13Rack = new HyveProductGroupLog(entryID, entryDate, "Init Rack Test", GroupType.ASSEMBLY, rackGroupName);
 		ash13Rack.addGroupDetail(entryID, entryDate, "test add server", 1, 
-				HyveProductGroupMemberType.ASSEMBLY_SUB_GROUP, "ASH 13 server", ash13Server.getGroupID(), 0, 10, 10);
+				MemberType.ASSEMBLY_SUB_GROUP, "ASH 13 server", ash13Server.getGroupID(), 0, 10, 10);
 		ash13Rack.addGroupDetail(entryID, entryDate, "test add cable", 2, 
-				HyveProductGroupMemberType.ALTERNATIVE_SUB_GROUP, "ASH 13 cable", cables.getGroupID(), 0, 0, 0);
+				MemberType.ALTERNATIVE_SUB_GROUP, "ASH 13 cable", cables.getGroupID(), 0, 0, 0);
 		SortedSet<HyveProductGroupDetail> details = ash13Rack.getGroupDetails(); 
 		assertNotNull(details);
 		assertTrue(details.size()==2);
@@ -135,13 +135,13 @@ public class HyveProductGroupLogTest {
 		Date date2 = sdf.parse("01/02/2014");
 		Date date3 = sdf.parse("01/03/2014");
 		Date date4 = sdf.parse("01/04/2014");
-		HyveProductGroupLog ash13Rack = new HyveProductGroupLog(entryID, date1, "Init Rack Test", HyveProductGroupType.ASSEMBLY, rackGroupName);
-		HyveProductGroupLog ash13Server = new HyveProductGroupLog(entryID, date2, "Init Test", HyveProductGroupType.ASSEMBLY, serverGroupName);
-		HyveProductGroupLog cables = new HyveProductGroupLog(entryID, date3, "Init Test", HyveProductGroupType.ALTERNATIVE, cableGroupName);
+		HyveProductGroupLog ash13Rack = new HyveProductGroupLog(entryID, date1, "Init Rack Test", GroupType.ASSEMBLY, rackGroupName);
+		HyveProductGroupLog ash13Server = new HyveProductGroupLog(entryID, date2, "Init Test", GroupType.ASSEMBLY, serverGroupName);
+		HyveProductGroupLog cables = new HyveProductGroupLog(entryID, date3, "Init Test", GroupType.ALTERNATIVE, cableGroupName);
 		ash13Rack.addGroupDetail(entryID, date2, "test add server", 1, 
-				HyveProductGroupMemberType.ASSEMBLY_SUB_GROUP, "ASH 13 server", ash13Server.getGroupID(), 0, 10, 10);
+				MemberType.ASSEMBLY_SUB_GROUP, "ASH 13 server", ash13Server.getGroupID(), 0, 10, 10);
 		ash13Rack.addGroupDetail(entryID, date3, "test add cable", 2, 
-				HyveProductGroupMemberType.ALTERNATIVE_SUB_GROUP, "ASH 13 cable", cables.getGroupID(), 0, 0, 0);
+				MemberType.ALTERNATIVE_SUB_GROUP, "ASH 13 cable", cables.getGroupID(), 0, 0, 0);
 		ash13Rack.deleteGroupDetail(entryID, date4, "test remove server", 1);
 
 		SortedSet<HyveProductGroupDetail> details = ash13Rack.getGroupDetails(); 
@@ -202,25 +202,25 @@ public class HyveProductGroupLogTest {
 	}
 
 	private HyveProductGroup addGroupDetailAndRevisionToAshServer(int entryID, Date entryDate, String entryComment, 
-			HyveProductGroupType groupType, String groupName, HyveProductGroupMemberType memberType, 
+			GroupType groupType, String groupName, MemberType memberType, 
 			String lineComment, int minBOMQty, int maxBOMQty, String revision) {
 		HyveProductGroup prodGroup = new HyveProductGroupLog(entryID, entryDate, entryComment, groupType, groupName);
 		ash13Server.addGroupDetail(entryID, entryDate, entryComment, 0, memberType, lineComment, 
 				prodGroup.getGroupID(), 0, minBOMQty, maxBOMQty);
-		ash13Server.addTag(HyveProductGroupTagType.REVISION, revision, entryID, entryDate, revision);
+		ash13Server.addTag(TagType.REVISION, revision, entryID, entryDate, revision);
 		return prodGroup;
 	}
 	
 	private void updateGroupDetailAndRevisionToAshServer(int entryID, Date entryDate, String entryComment, 
-			UUID subGroupID, HyveProductGroupMemberType memberType, 
+			UUID subGroupID, MemberType memberType, 
 			String lineComment, int minBOMQty, int maxBOMQty, String revision) {
 		ash13Server.updateGroupDetail(entryID, entryDate, entryComment, 0, memberType, lineComment, 
 				subGroupID, 0, minBOMQty, maxBOMQty);
-		ash13Server.addTag(HyveProductGroupTagType.REVISION, revision, entryID, entryDate, revision);
+		ash13Server.addTag(TagType.REVISION, revision, entryID, entryDate, revision);
 	}
 
 	private SortedSet<HyveProductGroupDetail> getRevisionAndAssertNotNull(int revision) {
-		SortedSet<HyveProductGroupDetail> details = ash13Server.getGroupDetailsWithGivenTag(HyveProductGroupTagType.REVISION, "revision " + revision); 
+		SortedSet<HyveProductGroupDetail> details = ash13Server.getGroupDetailsWithGivenTag(TagType.REVISION, "revision " + revision); 
 		assertNotNull(details);
 		assertTrue(!details.isEmpty());
 		System.out.println("details.size:" + details.size());
@@ -241,66 +241,66 @@ public class HyveProductGroupLogTest {
 		Date date7 = sdf.parse("01/07/2014");
 		
 		revision = 1;
-		ash13Server.addTag(HyveProductGroupTagType.FAMILY, "ASH", entryID, date1, "add family");
-		ash13Server.addTag(HyveProductGroupTagType.MODEL, "13", entryID, date1, "add model");
-		ash13Server.addTag(HyveProductGroupTagType.REVISION, "revision " + revision, entryID, date1, "revision " + revision);
-		details = ash13Server.getGroupDetailsWithGivenTag(HyveProductGroupTagType.FAMILY, "ASH"); 
+		ash13Server.addTag(TagType.FAMILY, "ASH", entryID, date1, "add family");
+		ash13Server.addTag(TagType.MODEL, "13", entryID, date1, "add model");
+		ash13Server.addTag(TagType.REVISION, "revision " + revision, entryID, date1, "revision " + revision);
+		details = ash13Server.getGroupDetailsWithGivenTag(TagType.FAMILY, "ASH"); 
 		assertNotNull(details);
 		assertTrue(details.isEmpty());
-		Map<HyveProductGroupTagType, String> tags = ash13Server.getGroupTags();
-		assertEquals(tags.get(HyveProductGroupTagType.FAMILY), "ASH");
-		assertEquals(tags.get(HyveProductGroupTagType.MODEL), "13");
-		assertEquals(tags.get(HyveProductGroupTagType.REVISION), "revision 1");
+		Map<TagType, String> tags = ash13Server.getGroupTags();
+		assertEquals(tags.get(TagType.FAMILY), "ASH");
+		assertEquals(tags.get(TagType.MODEL), "13");
+		assertEquals(tags.get(TagType.REVISION), "revision 1");
 		
-		details = ash13Server.getGroupDetailsWithGivenTag(HyveProductGroupTagType.REVISION, "revision 1"); 
+		details = ash13Server.getGroupDetailsWithGivenTag(TagType.REVISION, "revision 1"); 
 		assertNotNull(details);
 		assertTrue(details.isEmpty());
 		
 		revision++;
 		addGroupDetailAndRevisionToAshServer(entryID, date2, "add chassis",
-				HyveProductGroupType.ASSEMBLY, chassisGroupName, HyveProductGroupMemberType.ASSEMBLY_SUB_GROUP,
+				GroupType.ASSEMBLY, chassisGroupName, MemberType.ASSEMBLY_SUB_GROUP,
 				"chassis sub bom", 1, 1, "revision " + revision);
 			
 		details = getRevisionAndAssertNotNull(revision);
 		
 		revision++;
 		addGroupDetailAndRevisionToAshServer(entryID, date3, "add motherboard",
-				HyveProductGroupType.ALTERNATIVE, motherboardGroupName, HyveProductGroupMemberType.ALTERNATIVE_SUB_GROUP,
+				GroupType.ALTERNATIVE, motherboardGroupName, MemberType.ALTERNATIVE_SUB_GROUP,
 				"motherboard sub bom", 1, 1, "revision " + revision);
 		
 		details = getRevisionAndAssertNotNull(revision);
 		
 		revision++;
 		HyveProductGroup processor = addGroupDetailAndRevisionToAshServer(entryID, date3, "add processor",
-				HyveProductGroupType.ALTERNATIVE, processorGroupName, HyveProductGroupMemberType.ALTERNATIVE_SUB_GROUP,
+				GroupType.ALTERNATIVE, processorGroupName, MemberType.ALTERNATIVE_SUB_GROUP,
 				"processor sub bom", 1, 1, "revision " + revision);
 		
 		details = getRevisionAndAssertNotNull(revision);
 		
 		revision++;
 		updateGroupDetailAndRevisionToAshServer(entryID, date4, "update processor",
-				processor.getGroupID(), HyveProductGroupMemberType.ALTERNATIVE_SUB_GROUP,
+				processor.getGroupID(), MemberType.ALTERNATIVE_SUB_GROUP,
 				"processor sub bom", 2, 2, "revision " + revision);
 
 		details = getRevisionAndAssertNotNull(revision);
 		
 		revision++;
 		HyveProductGroup memory = addGroupDetailAndRevisionToAshServer(entryID, date5, "add memory",
-				HyveProductGroupType.ALTERNATIVE, memoryGroupName, HyveProductGroupMemberType.ALTERNATIVE_SUB_GROUP,
+				GroupType.ALTERNATIVE, memoryGroupName, MemberType.ALTERNATIVE_SUB_GROUP,
 				"memory sub bom", 2, 4, "revision " + revision);
 
 		details = getRevisionAndAssertNotNull(revision);
 		
 		revision++;
 		updateGroupDetailAndRevisionToAshServer(entryID, date6, "update memory",
-				memory.getGroupID(), HyveProductGroupMemberType.ALTERNATIVE_SUB_GROUP,
+				memory.getGroupID(), MemberType.ALTERNATIVE_SUB_GROUP,
 				"memory sub bom", 2, 2, "revision " + revision);
 
 		details = getRevisionAndAssertNotNull(revision);
 
 		revision++;
 		updateGroupDetailAndRevisionToAshServer(entryID, date7, "update processor",
-				processor.getGroupID(), HyveProductGroupMemberType.ALTERNATIVE_SUB_GROUP,
+				processor.getGroupID(), MemberType.ALTERNATIVE_SUB_GROUP,
 				"processor sub bom", 1, 2, "revision 8");
 
 		details = getRevisionAndAssertNotNull(revision);

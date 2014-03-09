@@ -5,22 +5,22 @@ import java.util.SortedSet;
 import java.util.UUID;
 
 import com.hyve.bom.concept.HyveProductGroupDetail;
-import com.hyve.bom.concept.HyveProductGroupTagType;
-import com.hyve.bom.concept.HyveProductGroupType;
+import com.hyve.bom.concept.TagType;
+import com.hyve.bom.concept.GroupType;
 import com.hyve.bom.concept.HyveProductGroup;
 
 public class HyveGroupSnapshot implements HyveProductGroup {
 
 	private final UUID snapshotGroupID;
 	private final String groupName;
-	private final HyveProductGroupType groupType; 
+	private final GroupType groupType; 
 	private final SortedSet<HyveProductGroupDetail> groupDetails; 
-	private final Map<HyveProductGroupTagType, String> groupTags;
+	private final Map<TagType, String> groupTags;
 	
 	public HyveGroupSnapshot(UUID snapshotGroupID, String groupName,
-			HyveProductGroupType groupType,
+			GroupType groupType,
 			SortedSet<HyveProductGroupDetail> groupDetails,
-			Map<HyveProductGroupTagType, String> groupTags) {
+			Map<TagType, String> groupTags) {
 		super();
 		this.snapshotGroupID = snapshotGroupID;
 		this.groupName = groupName;
@@ -40,7 +40,7 @@ public class HyveGroupSnapshot implements HyveProductGroup {
 	}
 
 	@Override
-	public HyveProductGroupType getGroupType() {
+	public GroupType getGroupType() {
 		return groupType;
 	}
 
@@ -50,7 +50,12 @@ public class HyveGroupSnapshot implements HyveProductGroup {
 	}
 
 	@Override
-	public Map<HyveProductGroupTagType, String> getGroupTags() {
+	public Map<TagType, String> getGroupTags() {
 		return groupTags;
+	}
+
+	@Override
+	public String getTagValue(TagType tagType) {
+		return groupTags.get(tagType);
 	}
 }
