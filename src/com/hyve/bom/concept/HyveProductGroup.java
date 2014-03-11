@@ -8,7 +8,7 @@ public interface HyveProductGroup {
 	UUID getGroupID();
 	String getGroupName();
 	GroupType getGroupType();
-	SortedSet<HyveProductGroupDetail> getGroupDetails();
+	SortedSet<HyveProductGroupMember> getGroupDetails();
 	Map<TagType, String> getGroupTags();
 	String getTagValue(TagType tagType);
 }

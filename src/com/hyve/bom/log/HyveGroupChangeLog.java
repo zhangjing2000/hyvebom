@@ -1,9 +1,10 @@
 package com.hyve.bom.log;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
-public class HyveGroupChangeLog implements java.io.Serializable, Comparable<HyveGroupChangeLog> {
+public abstract class HyveGroupChangeLog implements java.io.Serializable, Comparable<HyveGroupChangeLog> {
 	/**
 	 * 
 	 */
@@ -82,4 +83,15 @@ public class HyveGroupChangeLog implements java.io.Serializable, Comparable<Hyve
 			return logDate.compareTo(arg0.getLogDate());
 	}
 
+	@Override
+	public String toString() {
+		return new StringBuilder("")
+		.append(",logID:").append(logID.hashCode())
+		.append(",logUser:").append(logUserID)
+		.append(",logDate:").append((new SimpleDateFormat("MM/dd/yyyy")).format(logDate))
+		.append(",logType:").append(logType)
+		.append(",logComment:").append(logComment)
+		.toString();
+		
+	}
 }

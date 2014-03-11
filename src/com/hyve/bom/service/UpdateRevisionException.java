@@ -1,6 +1,6 @@
-package com.hyve.bom.log.exception;
+package com.hyve.bom.service;
 
-public class UpdateRevisionException extends InvalidGroupChangeException {
+public class UpdateRevisionException extends RuntimeException {
 
 	public UpdateRevisionException(String string) {
 		super(string);

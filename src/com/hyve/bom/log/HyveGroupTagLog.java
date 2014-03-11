@@ -28,4 +28,13 @@ class HyveGroupTagLog extends HyveGroupChangeLog {
 	String getTagValue() {
 		return tagValue;
 	}
+
+	@Override
+	public String toString() {
+		return new StringBuilder("LineChangeLog")
+			.append(super.toString())
+			.append(",tagType:").append(tagType)
+			.append(",tagValue:").append(tagValue)
+			.toString();
+	}
 }

@@ -3,11 +3,11 @@ package com.hyve.bom.log;
 import java.util.Date;
 import java.util.UUID;
 
-import com.hyve.bom.concept.HyveAlternativeGroupDetail;
-import com.hyve.bom.concept.HyveAssemblyGroupDetail;
-import com.hyve.bom.concept.HyveProductGroupDetail;
+import com.hyve.bom.concept.HyveAlternativeGroupMember;
+import com.hyve.bom.concept.HyveAssemblyGroupMember;
+import com.hyve.bom.concept.HyvePartGroupMember;
+import com.hyve.bom.concept.HyveProductGroupMember;
 import com.hyve.bom.concept.MemberType;
-import com.hyve.bom.concept.GroupType;
 
 class HyveGroupLineLog extends HyveGroupChangeLog {
 	/**
@@ -62,66 +62,28 @@ class HyveGroupLineLog extends HyveGroupChangeLog {
 	int getMaxBOMQty() {
 		return maxBOMQty;
 	}
+
+	@Override
+	public String toString() {
+		return new StringBuilder("LineChangeLog")
+			.append(super.toString())
+			.append(",line#:").append(line)
+			.append(",memberType:").append(logMemberType)
+			.append(",lineComment:").append(lineComment)
+			.append(",sub group:").append(subGroupID)
+			.append(",sku_no:").append(skuNo)
+			.append(",min_BOM_qty:").append(minBOMQty)
+			.append(",max_BOM_qty:").append(maxBOMQty)
+			.toString();
+	}
 	
-	HyveProductGroupDetail toHyveGroupProductDetail() {
+	HyveProductGroupMember toHyveGroupProductDetail() {
 		if (logMemberType == MemberType.ASSEMBLY_SUB_GROUP) {
-			return new HyveAssemblyGroupDetail() {
-				public UUID getGroupID() {
-					return getLogGroupID();
-				}
-				public int getLineNo() {
-					return line;
-				}
-				public String getLineComment() {
-					return lineComment;
-				}
-				public MemberType getMemberType() {
-					return logMemberType;
-				}
-				public UUID getSubGroupID() {
-					return subGroupID;
-				}
-				public int getMinBOMQty() {
-					return minBOMQty;
-				}
-				public int getMaxBOMQty() {
-					return maxBOMQty;
-				}
-			};
+			return new HyveAssemblyGroupMember(getLogGroupID(), line, lineComment, logMemberType, subGroupID, minBOMQty, maxBOMQty);
+		} else if (logMemberType == MemberType.ALTERNATIVE_SUB_GROUP) {
+			return new HyveAlternativeGroupMember(getLogGroupID(), line, lineComment, logMemberType, subGroupID) ;
 		} else {
-			return new HyveAlternativeGroupDetail() {
-
-				@Override
-				public UUID getGroupID() {
-					return getLogGroupID();
-				}
-
-				@Override
-				public int getLineNo() {
-					return line;
-				}
-
-				@Override
-				public String getLineComment() {
-					return lineComment;
-				}
-
-				@Override
-				public MemberType getMemberType() {
-					return logMemberType;
-				}
-
-				@Override
-				public UUID getSubGroupID() {
-					return subGroupID;
-				}
-
-				@Override
-				public int getSkuNo() {
-					return skuNo;
-				}
-				
-			};
+			return new HyvePartGroupMember(getLogGroupID(), line, lineComment, logMemberType, skuNo);
 		}
 	}
 }
