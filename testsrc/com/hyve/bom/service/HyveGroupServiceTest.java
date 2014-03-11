@@ -58,6 +58,46 @@ public class HyveGroupServiceTest {
 	public void tearDown() throws Exception {
   	}
 
+	private void assertFirstMemberAsChassis(SortedSet<HyveProductGroupMember> details) {
+		assertAssemblyGroupMember(details, 1, chassisGroupName);
+	}
+	
+	private void assertAssemblyGroupMember(SortedSet<HyveProductGroupMember> details, int memberIndex, String groupName) {
+		int arrayIdx = memberIndex -1;
+		HyveProductGroupMember subGroupMember = (HyveProductGroupMember)details.toArray()[arrayIdx];
+		assertEquals(MemberType.ASSEMBLY_SUB_GROUP, subGroupMember.getMemberType());
+		assertTrue(subGroupMember instanceof HyveAssemblyGroupMember);
+		HyveAssemblyGroupMember assemblyGroupMember = (HyveAssemblyGroupMember)subGroupMember;
+		SnapshotedHyveProductGroup snapshotSubGroup = service.getHyveProductGroupSnapshot(assemblyGroupMember.getSubGroupID());	
+		assertNotNull(snapshotSubGroup);
+		assertEquals(snapshotSubGroup.getGroupType(), GroupType.ASSEMBLY);
+		assertEquals(snapshotSubGroup.getGroupName(), groupName);
+	}
+
+	private void assertAlternativeGroupMember(SortedSet<HyveProductGroupMember> details, int memberIndex, String groupName) {
+		int arrayIdx = memberIndex -1;
+		HyveProductGroupMember subGroupMember = (HyveProductGroupMember)details.toArray()[arrayIdx];
+		assertEquals(MemberType.ALTERNATIVE_SUB_GROUP, subGroupMember.getMemberType());
+		assertTrue(subGroupMember instanceof HyveAlternativeGroupMember);
+		HyveAlternativeGroupMember motherboardSubGroup = (HyveAlternativeGroupMember)subGroupMember;
+		SnapshotedHyveProductGroup snapshotSubGroup = service.getHyveProductGroupSnapshot(motherboardSubGroup.getSubGroupID());	
+		assertNotNull(snapshotSubGroup);
+		assertEquals(snapshotSubGroup.getGroupType(), GroupType.ALTERNATIVE);
+		assertEquals(snapshotSubGroup.getGroupName(), groupName);
+	}
+	
+	private void assertSecondMemberAsMotherboard(SortedSet<HyveProductGroupMember> details) {
+		assertAlternativeGroupMember(details, 2, motherboardGroupName);
+	}
+	
+	private void assertThirdMemberAsProcessor(SortedSet<HyveProductGroupMember> details) {
+		assertAlternativeGroupMember(details, 3, processorGroupName);
+	}
+	
+	private void assertFourthMemberAsMemory(SortedSet<HyveProductGroupMember> details) {
+		assertAlternativeGroupMember(details, 4, memoryGroupName);
+	}
+	
 	@Test
 	public void testCreateSnapshot() throws ParseException {
 		int revision;
@@ -85,46 +125,93 @@ public class HyveGroupServiceTest {
 				"chassis sub bom", 1, 1);
 		ash13ServerSnapshot = service.createHyveProductGroupSnapshot(ash13ServerLog, date2, "revision" + revision);
 		assertNotNull(ash13ServerSnapshot);
-			
+		SortedSet<HyveProductGroupMember> details = ash13ServerSnapshot.getGroupDetails(); 
+		assertTrue(!details.isEmpty());
+		assertEquals(details.size(), 1);
+		assertFirstMemberAsChassis(details);
+		
 		revision++;
 		addGroupDetailToAshServer(entryID, date3, "add motherboard",
 				GroupType.ALTERNATIVE, motherboardGroupName, MemberType.ALTERNATIVE_SUB_GROUP,
 				"motherboard sub bom", 1, 1);
 		ash13ServerSnapshot = service.createHyveProductGroupSnapshot(ash13ServerLog, date3, "revision" + revision);
 		assertNotNull(ash13ServerSnapshot);
+		details = ash13ServerSnapshot.getGroupDetails(); 
+		assertTrue(!details.isEmpty());
+		assertEquals(details.size(), 2);
+		assertFirstMemberAsChassis(details);
+		assertSecondMemberAsMotherboard(details);
 		
 		revision++;
 		HyveProductGroup processor = addGroupDetailToAshServer(entryID, date3, "add processor",
 				GroupType.ALTERNATIVE, processorGroupName, MemberType.ALTERNATIVE_SUB_GROUP,
 				"processor sub bom", 1, 1);
+		assertEquals(ash13ServerLog.getGroupDetails().size(), 3);
 		ash13ServerSnapshot = service.createHyveProductGroupSnapshot(ash13ServerLog, date3, "revision" + revision);
 		assertNotNull(ash13ServerSnapshot);
+		details = ash13ServerSnapshot.getGroupDetails(); 
+		assertTrue(!details.isEmpty());
+		assertEquals(details.size(), 3);
+		assertFirstMemberAsChassis(details);
+		assertSecondMemberAsMotherboard(details);
+		assertThirdMemberAsProcessor(details);
 		
 		revision++;
-		int lineNo = getLineNo(ash13ServerSnapshot.getGroupDetails(), processor);
+		int lineNo = 3;
 		
 		updateGroupDetailToAshServer(entryID, date4, "update processor",
 				lineNo, processor.getGroupID(), MemberType.ALTERNATIVE_SUB_GROUP,
 				"processor sub bom", 2, 2);
 
+		assertEquals(ash13ServerLog.getGroupDetails().size(), 3);
+		ash13ServerSnapshot = service.createHyveProductGroupSnapshot(ash13ServerLog, date4, "revision" + revision);
+		assertNotNull(ash13ServerSnapshot);
+		details = ash13ServerSnapshot.getGroupDetails(); 
+		assertTrue(!details.isEmpty());
+		assertEquals(details.size(), 3);
+		assertFirstMemberAsChassis(details);
+		assertSecondMemberAsMotherboard(details);
+		assertThirdMemberAsProcessor(details);
+
 		revision++;
 		HyveProductGroup memory = addGroupDetailToAshServer(entryID, date5, "add memory",
 				GroupType.ALTERNATIVE, memoryGroupName, MemberType.ALTERNATIVE_SUB_GROUP,
 				"memory sub bom", 2, 4);
+		assertEquals(ash13ServerLog.getGroupDetails().size(),4);
+		ash13ServerSnapshot = service.createHyveProductGroupSnapshot(ash13ServerLog, date5, "revision" + revision);
+		assertNotNull(ash13ServerSnapshot);
+		details = ash13ServerSnapshot.getGroupDetails(); 
+		assertTrue(!details.isEmpty());
+		assertEquals(details.size(), 4);
+		assertFirstMemberAsChassis(details);
+		assertSecondMemberAsMotherboard(details);
+		assertThirdMemberAsProcessor(details);
+		assertFourthMemberAsMemory(details);
+
+		ash13ServerSnapshot = service.getHyveProductGroupSnapshot("revision" + (revision-1));
+		assertNotNull(ash13ServerSnapshot);
+		details = ash13ServerSnapshot.getGroupDetails(); 
+		assertTrue(!details.isEmpty());
+		assertEquals(details.size(), 3);
+		assertFirstMemberAsChassis(details);
+		assertSecondMemberAsMotherboard(details);
+		assertThirdMemberAsProcessor(details);
 
 		revision++;
-		lineNo = getLineNo(ash13ServerSnapshot.getGroupDetails(), processor);
+		lineNo = 4;
 		
 		updateGroupDetailToAshServer(entryID, date6, "update memory",
 				lineNo, memory.getGroupID(), MemberType.ALTERNATIVE_SUB_GROUP,
 				"memory sub bom", 2, 2);
+		ash13ServerSnapshot = service.createHyveProductGroupSnapshot(ash13ServerLog, date6, "revision" + revision);
 
 		revision++;
-		lineNo = getLineNo(ash13ServerSnapshot.getGroupDetails(), processor);
+		lineNo = 3;
 		
 		updateGroupDetailToAshServer(entryID, date7, "update processor",
 				lineNo, processor.getGroupID(), MemberType.ALTERNATIVE_SUB_GROUP,
 				"processor sub bom", 1, 2);
+		ash13ServerSnapshot = service.createHyveProductGroupSnapshot(ash13ServerLog, date7, "revision" + revision);
 
 		revision++;
 		HyveProductGroup harddrive = insertGroupDetailToAshServer(entryID, date8, "add hard drive",
@@ -132,6 +219,28 @@ public class HyveGroupServiceTest {
 				"hard drive sub bom", 4, 4);
 
 		assertNotNull(harddrive);
+		assertEquals(ash13ServerLog.getGroupDetails().size(),5);
+		ash13ServerSnapshot = service.createHyveProductGroupSnapshot(ash13ServerLog, date5, "revision" + revision);
+		assertNotNull(ash13ServerSnapshot);
+		details = ash13ServerSnapshot.getGroupDetails(); 
+		assertTrue(!details.isEmpty());
+		assertEquals(details.size(), 4);
+		assertFirstMemberAsChassis(details);
+		assertSecondMemberAsMotherboard(details);
+		assertAlternativeGroupMember(details, 3, processorGroupName);
+		assertAlternativeGroupMember(details, 4, memoryGroupName);
+		
+		revision++;
+		ash13ServerSnapshot = service.createHyveProductGroupSnapshot(ash13ServerLog, date8, "revision" + revision);
+		assertNotNull(ash13ServerSnapshot);
+		details = ash13ServerSnapshot.getGroupDetails(); 
+		assertTrue(!details.isEmpty());
+		assertEquals(details.size(), 5);
+		assertFirstMemberAsChassis(details);
+		assertSecondMemberAsMotherboard(details);
+		assertAlternativeGroupMember(details, 3, harddriveGroupName);
+		assertAlternativeGroupMember(details, 4, processorGroupName);
+		assertAlternativeGroupMember(details, 5, memoryGroupName);
 		
 	}
 

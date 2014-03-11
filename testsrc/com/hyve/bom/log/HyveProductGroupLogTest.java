@@ -329,6 +329,7 @@ public class HyveProductGroupLogTest {
 				"processor sub bom", 2, 2);
 
 		details = ash13Server.getGroupDetailsAtGivenTime(date4); 
+		assertEquals(details.size(),3);
 		
 		HyveProductGroup memory = addGroupDetailToAshServer(entryID, date5, "add memory",
 				GroupType.ALTERNATIVE, memoryGroupName, MemberType.ALTERNATIVE_SUB_GROUP,

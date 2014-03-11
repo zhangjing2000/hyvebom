@@ -26,6 +26,7 @@ public class HyveProductGroupServiceImpl implements HyveProductGroupService {
 		= new HashMap<UUID, Map<Date, SnapshotedHyveProductGroup>>();
 	private final Map<String, SnapshotedHyveProductGroup> groupRevisions = new HashMap<String, SnapshotedHyveProductGroup>();
 	
+	//private boolean printTrace = false;
 	@Override
 	public LoggedHyveProductGroup createHyveProductGroupLog(int entryID, Date entryDate, String comment,
 			GroupType groupType, String groupName) {
@@ -55,7 +56,7 @@ public class HyveProductGroupServiceImpl implements HyveProductGroupService {
 		UUID snapshotGroupID = UUID.randomUUID();
 		UUID logUUID = groupLog.getGroupID();
 		Map<TagType, String> tags = groupLog.getGroupTagsAtGivenTime(snapshotDateTime);
-		SortedSet<HyveProductGroupMember> logDetails = groupLog.getGroupDetails();
+		SortedSet<HyveProductGroupMember> logDetails = groupLog.getGroupDetailsAtGivenTime(snapshotDateTime);
 		SortedSet<HyveProductGroupMember> snapshotDetails = new TreeSet<HyveProductGroupMember>();
 		for (HyveProductGroupMember logDetail:logDetails) {
 			HyveProductGroupMember snapshotDetail = null;
@@ -63,31 +64,47 @@ public class HyveProductGroupServiceImpl implements HyveProductGroupService {
 				UUID logSubGroupID = ((HyveAssemblyGroupMember)logDetail).getSubGroupID();
 				int minBOMQty = ((HyveAssemblyGroupMember)logDetail).getMinBOMQty();
 				int maxBOMQty = ((HyveAssemblyGroupMember)logDetail).getMaxBOMQty();
-				UUID snapshotID = getSnapshotGroupID(logSubGroupID, snapshotDateTime);
-				if (snapshotID == null) {
+				SnapshotedHyveProductGroup subGroupSnapshot = null;
+				UUID snapshotSubGroupID = getSnapshotGroupID(logSubGroupID, snapshotDateTime);
+				if (snapshotSubGroupID == null) {
 					LoggedHyveProductGroup logSubGroup = groupLogs.get(logSubGroupID);
 					if (logSubGroup == null) 
 						throw new GroupNotFoundException("Group:" + logSubGroupID + " not found");
-					SnapshotedHyveProductGroup subGroupSnapshot = createHyveProductGroupSnapshot(logSubGroup, snapshotDateTime);
-					snapshotDetail = new HyveAssemblyGroupMember(snapshotGroupID, logDetail.getLineNo(), logDetail.getLineComment(), logDetail.getMemberType(), subGroupSnapshot.getGroupID(), minBOMQty, maxBOMQty);
+					subGroupSnapshot = createHyveProductGroupSnapshot(logSubGroup, snapshotDateTime);
+				} else {
+					subGroupSnapshot = getHyveProductGroupSnapshot(snapshotSubGroupID);
 				}
+				snapshotDetail = new HyveAssemblyGroupMember(snapshotGroupID, logDetail.getLineNo(), 
+						logDetail.getLineComment(), logDetail.getMemberType(), 
+						subGroupSnapshot.getGroupID(), minBOMQty, maxBOMQty);
 			} else if (logDetail instanceof HyveAlternativeGroupMember) {
 				UUID logSubGroupID = ((HyveAlternativeGroupMember)logDetail).getSubGroupID();
+				SnapshotedHyveProductGroup subGroupSnapshot = null;
 				UUID snapshotID = getSnapshotGroupID(logSubGroupID, snapshotDateTime);
 				if (snapshotID == null) {
 					LoggedHyveProductGroup logSubGroup = groupLogs.get(logSubGroupID);
 					if (logSubGroup == null) 
 						throw new GroupNotFoundException("Group:" + logSubGroupID + " not found");
-					SnapshotedHyveProductGroup subGroupSnapshot = createHyveProductGroupSnapshot(logSubGroup, snapshotDateTime);
-					snapshotDetail = new HyveAlternativeGroupMember(snapshotGroupID, logDetail.getLineNo(), logDetail.getLineComment(), logDetail.getMemberType(), subGroupSnapshot.getGroupID());
+					subGroupSnapshot = createHyveProductGroupSnapshot(logSubGroup, snapshotDateTime);
+				} else {
+					subGroupSnapshot = getHyveProductGroupSnapshot(snapshotID);
 				}
-				
+				snapshotDetail = new HyveAlternativeGroupMember(snapshotGroupID, logDetail.getLineNo(), logDetail.getLineComment(), logDetail.getMemberType(), subGroupSnapshot.getGroupID());
 			} else if (logDetail instanceof HyvePartGroupMember) {
 				snapshotDetail = new HyvePartGroupMember(snapshotGroupID, logDetail.getLineNo(), logDetail.getLineComment(), logDetail.getMemberType(), ((HyvePartGroupMember) logDetail).getSkuNo());
 				
 			}
 			if (snapshotDetail != null) snapshotDetails.add(snapshotDetail);
 		}
+		/*
+		if (printTrace) {
+			System.out.println("snapshot date:" + snapshotDateTime);
+			System.out.println("GroupName:" + groupLog.getGroupName());
+			for (Map.Entry<TagType, String> entry: tags.entrySet()) {
+				System.out.println("tags: key:" + entry.getKey() + ",value:" + entry.getValue());
+			}
+		}
+		*/
 		SnapshotedHyveProductGroup snapshot = new HyveGroupSnapshot(logUUID, snapshotDateTime, snapshotDetails, tags);
 		putSnapshotGroup(logUUID, snapshotDateTime, snapshot);
 		return snapshot;
@@ -101,5 +118,16 @@ public class HyveProductGroupServiceImpl implements HyveProductGroupService {
 		SnapshotedHyveProductGroup snapshot = createHyveProductGroupSnapshot(groupLog, snapshotDateTime);
 		groupRevisions.put(revision, snapshot);
 		return snapshot;
+	}
+
+	@Override
+	public SnapshotedHyveProductGroup getHyveProductGroupSnapshot(
+			String revision) {
+		return groupRevisions.get(revision);
+	}
+
+	@Override
+	public SnapshotedHyveProductGroup getHyveProductGroupSnapshot(UUID groupID) {
+		return groupSnapshots.get(groupID);
 	}
 }
