@@ -86,8 +86,6 @@ public abstract class HyveGroupChangeLog implements java.io.Serializable, Compar
 	@Override
 	public String toString() {
 		return new StringBuilder("")
-		.append(",logID:").append(logID.hashCode())
-		.append(",logUser:").append(logUserID)
 		.append(",logDate:").append((new SimpleDateFormat("MM/dd/yyyy")).format(logDate))
 		.append(",logType:").append(logType)
 		.append(",logComment:").append(logComment)

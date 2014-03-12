@@ -1,8 +1,6 @@
 package com.hyve.bom.log;
 
 public enum GroupChangeLogType {
-	ARCHIEVE_GROUP,
-	DELETE_GROUP,
 	NEW_TAG,
 	DELETE_TAG,
 	NEW_GROUP_LINE,
