@@ -10,9 +10,6 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.UUID;
 
-import com.hyve.bom.concept.HyveAlternativeGroupMember;
-import com.hyve.bom.concept.HyveAssemblyGroupMember;
-import com.hyve.bom.concept.HyvePartGroupMember;
 import com.hyve.bom.concept.HyveProductGroupMember;
 import com.hyve.bom.concept.MemberType;
 import com.hyve.bom.concept.TagType;
@@ -189,32 +186,15 @@ public class HyveProductGroupLog implements LoggedHyveProductGroup {
 			if (detail.getLineNo() < insertLineNo) continue;
 			if (detail.getLineNo() == insertLineNo) {
 				insertLineNo++;
-				if (detail instanceof HyveAssemblyGroupMember) {
-					HyveAssemblyGroupMember assemblyDetail = (HyveAssemblyGroupMember)detail;
-					log = new HyveGroupLineLog(groupID,  entryID, entryDate,
-							GroupChangeLogType.UPDATE_GROUP_LINE, comment,
-							insertLineNo, assemblyDetail.getMemberType(), 
-							assemblyDetail.getLineComment(),
-							assemblyDetail.getSubGroupID(), 0, 
-							assemblyDetail.getMinBOMQty(), 
-							assemblyDetail.getMaxBOMQty());
-				} else if (detail instanceof HyveAlternativeGroupMember) {
-					HyveAlternativeGroupMember altDetail = (HyveAlternativeGroupMember)detail;
-					log = new HyveGroupLineLog(groupID,  entryID, entryDate,
-							GroupChangeLogType.UPDATE_GROUP_LINE, comment,
-							insertLineNo, altDetail.getMemberType(), 
-							altDetail.getLineComment(),
-							altDetail.getSubGroupID(), 0, 
-							0, 0);
-				} else if (detail instanceof HyvePartGroupMember) {
-					HyvePartGroupMember partDetail = (HyvePartGroupMember)detail;
-					log = new HyveGroupLineLog(groupID,  entryID, entryDate,
-							GroupChangeLogType.UPDATE_GROUP_LINE, comment,
-							insertLineNo, partDetail.getMemberType(), 
-							partDetail.getLineComment(),
-							null, partDetail.getSkuNo(), 
-							0, 0);
-				}
+				log = new HyveGroupLineLog(groupID,  entryID, entryDate,
+						GroupChangeLogType.UPDATE_GROUP_LINE, comment,
+						insertLineNo, 
+						detail.getMemberType(), 
+						detail.getLineComment(),
+						detail.getSubGroupID(), 
+						detail.getSkuNo(), 
+						detail.getMinBOMQty(), 
+						detail.getMaxBOMQty());
 				addGroupDetail(log);
 			}
 			if (detail.getLineNo() > insertLineNo) break;

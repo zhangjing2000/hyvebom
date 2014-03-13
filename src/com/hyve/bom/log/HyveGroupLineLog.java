@@ -3,9 +3,6 @@ package com.hyve.bom.log;
 import java.util.Date;
 import java.util.UUID;
 
-import com.hyve.bom.concept.HyveAlternativeGroupMember;
-import com.hyve.bom.concept.HyveAssemblyGroupMember;
-import com.hyve.bom.concept.HyvePartGroupMember;
 import com.hyve.bom.concept.HyveProductGroupMember;
 import com.hyve.bom.concept.MemberType;
 
@@ -78,12 +75,6 @@ class HyveGroupLineLog extends HyveGroupChangeLog {
 	}
 	
 	HyveProductGroupMember toHyveGroupProductDetail() {
-		if (logMemberType == MemberType.ASSEMBLY_SUB_GROUP) {
-			return new HyveAssemblyGroupMember(getLogGroupID(), line, lineComment, logMemberType, subGroupID, minBOMQty, maxBOMQty);
-		} else if (logMemberType == MemberType.ALTERNATIVE_SUB_GROUP) {
-			return new HyveAlternativeGroupMember(getLogGroupID(), line, lineComment, logMemberType, subGroupID) ;
-		} else {
-			return new HyvePartGroupMember(getLogGroupID(), line, lineComment, logMemberType, skuNo);
-		}
+		return new HyveProductGroupMember(getLogGroupID(), line, lineComment, logMemberType, subGroupID, skuNo, minBOMQty, maxBOMQty);
 	}
 }
