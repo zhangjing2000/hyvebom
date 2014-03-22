@@ -1,10 +1,5 @@
 package com.hyve.plan.mps;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-
 import com.hyve.log.common.LogEntry;
 import com.hyve.plan.concept.LoggedHyvePlanImpl;
 import com.hyve.plan.concept.PlanEntryLog;
