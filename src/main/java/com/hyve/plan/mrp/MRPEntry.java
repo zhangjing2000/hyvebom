@@ -2,15 +2,16 @@ package com.hyve.plan.mrp;
 
 import java.util.Date;
 
+import com.hyve.plan.concept.HyvePlant;
 import com.hyve.plan.concept.PlanEntry;
 
 public class MRPEntry implements PlanEntry {
 	private final Date planRecDate;
-	private final int planLocation;
+	private final HyvePlant planLocation;
 	private final int planRecQty;
 	private final int skuNo;
 	
-	public MRPEntry(Date startDate, int plantLocNo, int deliveryQty,
+	public MRPEntry(Date startDate, HyvePlant plantLocNo, int deliveryQty,
 			int skuNo) {
 		super();
 		this.planRecDate = startDate;
@@ -22,7 +23,7 @@ public class MRPEntry implements PlanEntry {
 	public Date getPlanDate() {
 		return planRecDate;
 	}
-	public int getPlanLocation() {
+	public HyvePlant getPlanLocation() {
 		return planLocation;
 	}
 	public int getPlanQty() {
@@ -39,7 +40,7 @@ public class MRPEntry implements PlanEntry {
 		result = prime * result + skuNo;
 		result = prime * result
 				+ ((planRecDate == null) ? 0 : planRecDate.hashCode());
-		result = prime * result + planLocation;
+		result = prime * result + planLocation.getLocNo();
 		return result;
 	}
 

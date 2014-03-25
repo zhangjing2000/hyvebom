@@ -3,19 +3,20 @@ package com.hyve.plan.forecast;
 import java.util.Date;
 import java.util.UUID;
 
+import com.hyve.plan.concept.HyvePlant;
 import com.hyve.plan.concept.PlanEntry;
 
 public class ForecastEntry implements PlanEntry{
 	private final Date shipDate;
-	private final int plantLocNo;
+	private final HyvePlant plant;
 	private final int shipQty;
 	private final UUID custBOM;
 	
-	public ForecastEntry(Date shipDate, int plantLocNo, int deliveryQty,
+	public ForecastEntry(Date shipDate, HyvePlant plantLocNo, int deliveryQty,
 			UUID custBOM) {
 		super();
 		this.shipDate = shipDate;
-		this.plantLocNo = plantLocNo;
+		this.plant = plantLocNo;
 		this.shipQty = deliveryQty;
 		this.custBOM = custBOM;
 	}
@@ -23,8 +24,8 @@ public class ForecastEntry implements PlanEntry{
 	public Date getPlanDate() {
 		return shipDate;
 	}
-	public int getPlanLocation() {
-		return plantLocNo;
+	public HyvePlant getPlanLocation() {
+		return plant;
 	}
 	public int getPlanQty() {
 		return shipQty;
@@ -40,7 +41,7 @@ public class ForecastEntry implements PlanEntry{
 		result = prime * result + ((custBOM == null) ? 0 : custBOM.hashCode());
 		result = prime * result
 				+ ((shipDate == null) ? 0 : shipDate.hashCode());
-		result = prime * result + plantLocNo;
+		result = prime * result + plant.getLocNo();
 		return result;
 	}
 
@@ -63,7 +64,7 @@ public class ForecastEntry implements PlanEntry{
 				return false;
 		} else if (!shipDate.equals(other.shipDate))
 			return false;
-		if (plantLocNo != other.plantLocNo)
+		if (plant != other.plant)
 			return false;
 		return true;
 	}

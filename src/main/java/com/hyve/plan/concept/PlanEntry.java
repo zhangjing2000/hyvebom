@@ -5,5 +5,5 @@ import java.util.Date;
 public interface PlanEntry {
 	Date getPlanDate();
 	int getPlanQty();
-	int getPlanLocation();
+	HyvePlant getPlanLocation();
 }

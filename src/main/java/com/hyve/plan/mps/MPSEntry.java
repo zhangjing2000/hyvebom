@@ -3,21 +3,22 @@ package com.hyve.plan.mps;
 import java.util.Date;
 import java.util.UUID;
 
+import com.hyve.plan.concept.HyvePlant;
 import com.hyve.plan.concept.PlanEntry;
 
 public class MPSEntry implements PlanEntry {
 	private final Date plannedDeliveryDate;
 	private final Date plannedStartDate;
-	private final int plantLocNo;
+	private final HyvePlant plant;
 	private final int plannedQty;
 	private final UUID custBOM;
 	
-	public MPSEntry(Date startDate, Date endDate, int plantLocNo, int deliveryQty,
+	public MPSEntry(Date startDate, Date endDate, HyvePlant plant, int deliveryQty,
 			UUID custBOM) {
 		super();
 		this.plannedDeliveryDate = endDate;
 		this.plannedStartDate = startDate;
-		this.plantLocNo = plantLocNo;
+		this.plant = plant;
 		this.plannedQty = deliveryQty;
 		this.custBOM = custBOM;
 	}
@@ -28,8 +29,8 @@ public class MPSEntry implements PlanEntry {
 	public Date getPlanDate() {
 		return plannedStartDate;
 	}
-	public int getPlanLocation() {
-		return plantLocNo;
+	public HyvePlant getPlanLocation() {
+		return plant;
 	}
 	public int getPlanQty() {
 		return plannedQty;
@@ -45,7 +46,7 @@ public class MPSEntry implements PlanEntry {
 		result = prime * result + ((custBOM == null) ? 0 : custBOM.hashCode());
 		result = prime * result
 				+ ((plannedDeliveryDate == null) ? 0 : plannedDeliveryDate.hashCode());
-		result = prime * result + plantLocNo;
+		result = prime * result + plant.getLocNo();
 		return result;
 	}
 
@@ -73,7 +74,7 @@ public class MPSEntry implements PlanEntry {
 				return false;
 		} else if (!plannedDeliveryDate.equals(other.plannedDeliveryDate))
 			return false;
-		if (plantLocNo != other.plantLocNo)
+		if (plant != other.plant)
 			return false;
 		return true;
 	}

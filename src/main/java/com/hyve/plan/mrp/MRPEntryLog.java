@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.UUID;
 
 import com.hyve.log.common.LogEntry;
+import com.hyve.plan.concept.HyvePlant;
 import com.hyve.plan.concept.PlanEntryLog;
 import com.hyve.plan.concept.PlanEntryLogType;
 
@@ -21,9 +22,9 @@ public class MRPEntryLog extends MRPEntry implements PlanEntryLog<MRPEntry> {
 				mrpEntry.getPlanQty(), mrpEntry.getSkuNo(), 
 				logEntry.getLogUserID(), logEntry.getLogDate(), logEntry.getLogComment());
 	}
-	public MRPEntryLog(PlanEntryLogType logType, Date startDate, int plantLocNo, int deliveryQty,
+	public MRPEntryLog(PlanEntryLogType logType, Date startDate, HyvePlant plant, int deliveryQty,
 			int skuNo, int logUserID, Date logDate, String logComment) {
-		super(startDate, plantLocNo, deliveryQty, skuNo);
+		super(startDate, plant, deliveryQty, skuNo);
 		this.logID = UUID.randomUUID();
 		this.logType = logType;
 		this.logUserID = logUserID;

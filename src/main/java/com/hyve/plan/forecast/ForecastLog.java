@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.UUID;
 
 import com.hyve.log.common.LogEntry;
+import com.hyve.plan.concept.HyvePlant;
 import com.hyve.plan.concept.PlanEntryLog;
 import com.hyve.plan.concept.PlanEntryLogType;
 
@@ -20,9 +21,9 @@ public class ForecastLog extends ForecastEntry implements PlanEntryLog<ForecastE
 				forecastEntry.getPlanQty(), forecastEntry.getCustBOM(), 
 				logEntry.getLogUserID(), logEntry.getLogDate(), logEntry.getLogComment());
 	}
-	public ForecastLog(PlanEntryLogType logType, Date shipDate, int plantLocNo, int shipQty,
+	public ForecastLog(PlanEntryLogType logType, Date shipDate, HyvePlant plant, int shipQty,
 			UUID custBOM, int logUserID, Date logDate, String logComment) {
-		super(shipDate, plantLocNo, shipQty, custBOM);
+		super(shipDate, plant, shipQty, custBOM);
 		this.logID = UUID.randomUUID();
 		this.logType = logType;
 		this.logUserID = logUserID;
