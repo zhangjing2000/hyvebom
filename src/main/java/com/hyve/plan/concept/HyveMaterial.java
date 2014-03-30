@@ -45,7 +45,6 @@ public class HyveMaterial implements Serializable, Comparable<HyveMaterial> {
 		return true;
 	}
 
-	@Override
 	public int compareTo(HyveMaterial o) {
 		return skuNo - o.skuNo;
 	}

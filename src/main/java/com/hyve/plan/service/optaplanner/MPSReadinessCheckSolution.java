@@ -59,17 +59,14 @@ public class MPSReadinessCheckSolution implements Solution<HardSoftScore> {
 		return accumulatedMRP;
 	}
 
-	@Override
 	public Collection<? extends Object> getProblemFacts() {
 		return null;
 	}
 
-	@Override
 	public HardSoftScore getScore() {
 		return score;
 	}
 
-	@Override
 	public void setScore(HardSoftScore score) {
 		this.score = score;
 	}

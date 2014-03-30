@@ -50,7 +50,6 @@ public class ForecastLog extends ForecastEntry implements PlanEntryLog<ForecastE
 	public String getLogComment() {
 		return logComment;
 	}
-	@Override
 	public int compareTo(PlanEntryLog<ForecastEntry> o) {
 		if (logDate == null) {
 			return -1;
@@ -63,7 +62,6 @@ public class ForecastLog extends ForecastEntry implements PlanEntryLog<ForecastE
 				return logDate.compareTo(o.getLogDate());
 		}
 	}
-	@Override
 	public ForecastEntry getPlanEntry() {
 		return this;
 	}

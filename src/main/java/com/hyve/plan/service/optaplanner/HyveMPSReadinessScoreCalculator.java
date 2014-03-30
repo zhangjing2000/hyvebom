@@ -15,7 +15,6 @@ public class HyveMPSReadinessScoreCalculator implements SimpleScoreCalculator<MP
 
 	private int hardScore = 0;
 	private int softScore = 0;
-	@Override
 	public HardSoftScore calculateScore(MPSReadinessCheckSolution solution) {
 		Map<HyvePlant, Map<Date, List<? extends FixedPlanEntry>>> fulfilled = solution.getFulfilledMPS();
 		Map<HyvePlant, Map<Date, List<MRPEntry>>> mrp = solution.getAccumulatedMRP();

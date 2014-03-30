@@ -32,42 +32,34 @@ public class HyveGroupSnapshot implements SnapshotedHyveProductGroup {
 		this.groupDetails = groupDetails;
 	}
 
-	@Override
 	public UUID getGroupID() {
 		return snapshotGroupID;
 	}
 
-	@Override
 	public String getGroupName() {
 		return groupName;
 	}
 
-	@Override
 	public GroupType getGroupType() {
 		return groupType;
 	}
 
-	@Override
 	public SortedSet<HyveProductGroupMember> getGroupDetails() {
 		return groupDetails;
 	}
 
-	@Override
 	public Map<TagType, String> getGroupTags() {
 		return groupTags;
 	}
 
-	@Override
 	public String getTagValue(TagType tagType) {
 		return groupTags.get(tagType);
 	}
 
-	@Override
 	public UUID getLoggedGroupID() {
 		return loggedGroupID;
 	}
 
-	@Override
 	public Date getSnapshotDateTime() {
 		return snapshotDateTime;
 	}

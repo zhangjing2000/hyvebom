@@ -17,22 +17,18 @@ public abstract class LoggedHyvePlanImpl<T extends PlanEntry> implements LoggedH
 		this.hyveContract = hyveContract;
 	}
 
-	@Override
 	public HyveContract getContract() {
 		return hyveContract;
 	}
 
-	@Override
 	public List<PlanEntryLog<T>> getPlanLogs() {
 		return logs;
 	}
 
-	@Override
 	public List<T> getLatestPlan() {
 		return getPlanSnapshot(null);
 	}
 
-	@Override
 	public List<T> getPlanSnapshot(Date snapshotDate) {
 		List<T> result = new ArrayList<T>();
 		Collections.sort(logs);
@@ -43,20 +39,17 @@ public abstract class LoggedHyvePlanImpl<T extends PlanEntry> implements LoggedH
 		return result;
 	}
 
-	@Override
 	public void addPlanEntry(T planEntry, LogEntry logEntry) {
 		PlanEntryLog<T> planEntryLog = newPlanEntryLog(PlanEntryLogType.ADD_ENTRY, planEntry, logEntry); 
 		logs.add(planEntryLog);
 	}
 
-	@Override
 	public void deletePlanEntry(T planEntry, LogEntry logEntry) {
 		PlanEntryLog<T> planEntryLog = newPlanEntryLog(PlanEntryLogType.DELETE_ENTRY, planEntry, logEntry); 
 		logs.add(planEntryLog);
 		
 	}
 
-	@Override
 	public void updatePlanEntry(T planEntry, LogEntry logEntry) {
 		PlanEntryLog<T> planEntryLog = newPlanEntryLog(PlanEntryLogType.DELETE_ENTRY, planEntry, logEntry); 
 		logs.add(planEntryLog);

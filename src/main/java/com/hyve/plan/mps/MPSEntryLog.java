@@ -51,7 +51,6 @@ public class MPSEntryLog extends MPSEntry implements PlanEntryLog<MPSEntry> {
 	public String getLogComment() {
 		return logComment;
 	}
-	@Override
 	public int compareTo(PlanEntryLog<MPSEntry> o) {
 		if (logDate.equals(o.getPlanDate())) {
 			return logID.compareTo(o.getLogID());
@@ -59,7 +58,6 @@ public class MPSEntryLog extends MPSEntry implements PlanEntryLog<MPSEntry> {
 			return logDate.compareTo(o.getLogDate());
 		}
 	}
-	@Override
 	public MPSEntry getPlanEntry() {
 		return this;
 	}

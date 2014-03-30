@@ -27,7 +27,6 @@ public class HyvePlant implements Serializable, Comparable<HyvePlant>  {
 	public String getCountryCode() {
 		return countryCode;
 	}
-	@Override
 	public int compareTo(HyvePlant arg0) {
 		return this.locNo - arg0.getLocNo();
 	}

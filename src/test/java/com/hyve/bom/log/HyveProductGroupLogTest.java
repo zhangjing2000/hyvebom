@@ -58,6 +58,7 @@ public class HyveProductGroupLogTest {
 		entryDate = sdf.parse("01/01/2014");
 		ash13Server = new HyveProductGroupLog(entryID, entryDate, "Init Test", GroupType.ASSEMBLY, serverGroupName);
 		cables = new HyveProductGroupLog(entryID, entryDate, "Init Test", GroupType.ALTERNATIVE, cableGroupName);
+		//power = new HyveProductGroupLog(entryID, entryDate, "Init Test", GroupType.ALTERNATIVE, powerGroupName);
 	}
 
 	@After

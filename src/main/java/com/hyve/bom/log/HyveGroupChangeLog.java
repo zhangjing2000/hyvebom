@@ -77,7 +77,6 @@ public abstract class HyveGroupChangeLog implements java.io.Serializable, Compar
 		return true;
 	}
 
-	@Override
 	public int compareTo(HyveGroupChangeLog arg0) {
 		if(logDate.equals(arg0.getLogDate()))
 			return logID.compareTo(arg0.logID);

@@ -24,7 +24,6 @@ public class HyveProductGroupServiceImpl implements HyveProductGroupService {
 	private final Map<String, SnapshotedHyveProductGroup> groupRevisions = new HashMap<String, SnapshotedHyveProductGroup>();
 	
 	//private boolean printTrace = false;
-	@Override
 	public LoggedHyveProductGroup createHyveProductGroupLog(int entryID, Date entryDate, String comment,
 			GroupType groupType, String groupName) {
 		LoggedHyveProductGroup groupLog = new HyveProductGroupLog(entryID, entryDate, comment, groupType, groupName);
@@ -91,7 +90,6 @@ public class HyveProductGroupServiceImpl implements HyveProductGroupService {
 		return snapshot;
 	}
 
-	@Override
 	public SnapshotedHyveProductGroup createHyveProductGroupSnapshot(
 			LoggedHyveProductGroup groupLog, Date snapshotDateTime, String revision) {
 		if (groupRevisions.get(revision) != null) 
@@ -101,13 +99,10 @@ public class HyveProductGroupServiceImpl implements HyveProductGroupService {
 		return snapshot;
 	}
 
-	@Override
-	public SnapshotedHyveProductGroup getHyveProductGroupSnapshot(
-			String revision) {
+	public SnapshotedHyveProductGroup getHyveProductGroupSnapshot(String revision) {
 		return groupRevisions.get(revision);
 	}
 
-	@Override
 	public SnapshotedHyveProductGroup getHyveProductGroupSnapshot(UUID groupID) {
 		return groupSnapshots.get(groupID);
 	}

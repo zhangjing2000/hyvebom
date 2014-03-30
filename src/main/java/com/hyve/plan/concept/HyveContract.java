@@ -57,7 +57,6 @@ public class HyveContract {
 			return logUser;
 		}
 
-		@Override
 		public int compareTo(ContractChangeLog arg0) {
 			if (this.logDate.equals(arg0.getLogDate())) {
 				return this.logID.compareTo(arg0.getLogID());

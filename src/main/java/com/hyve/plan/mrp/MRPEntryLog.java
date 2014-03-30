@@ -51,7 +51,6 @@ public class MRPEntryLog extends MRPEntry implements PlanEntryLog<MRPEntry> {
 	public String getLogComment() {
 		return logComment;
 	}
-	@Override
 	public int compareTo(PlanEntryLog<MRPEntry> o) {
 		if (logDate.equals(o.getPlanDate())) {
 			return logID.compareTo(o.getLogID());
@@ -59,7 +58,6 @@ public class MRPEntryLog extends MRPEntry implements PlanEntryLog<MRPEntry> {
 			return logDate.compareTo(o.getLogDate());
 		}
 	}
-	@Override
 	public MRPEntry getPlanEntry() {
 		return this;
 	}

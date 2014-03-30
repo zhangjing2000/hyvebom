@@ -32,28 +32,23 @@ public class HyveProductGroupLog implements LoggedHyveProductGroup {
 		setGroupName(groupName, entryID, entryDate, comment);
 	}
 	
-	@Override
 	public UUID getGroupID() {
 		return groupID;
 	}
 
-	@Override
 	public String getGroupName() {
 		//return headers == null? null:headers.isEmpty()?null:headers.last().getGroupName();
 		return getTagValue(TagType.GROUP_NAME);
 	}
 
-	@Override
 	public GroupType getGroupType() {
 		return GroupType.valueOf(getTagValue(TagType.GROUP_TYPE));
 	}
 
-	@Override
 	public SortedSet<HyveProductGroupMember> getGroupDetails() {
 		return getGroupDetailsAtGivenTime(null);
 	}
 
-	
 	public SortedSet<HyveProductGroupMember> getGroupDetailsAtGivenTime(Date timeStamp) {
 		Map<Integer, HyveProductGroupMember> map = new HashMap<Integer, HyveProductGroupMember>();
 		for (HyveGroupLineLog log: lines) {
@@ -65,7 +60,7 @@ public class HyveProductGroupLog implements LoggedHyveProductGroup {
 			}
 		}
 		Comparator<HyveProductGroupMember> detailComparator = new Comparator<HyveProductGroupMember>() {
-				@Override
+				
 				public int compare(HyveProductGroupMember d1,
 						HyveProductGroupMember d2) {
 					return d1.getLineNo() - d2.getLineNo();
@@ -76,7 +71,6 @@ public class HyveProductGroupLog implements LoggedHyveProductGroup {
 		return result;
 	}
 
-	@Override
 	public Map<TagType, String> getGroupTags() {
 		return getGroupTagsAtGivenTime(null);
 	}
