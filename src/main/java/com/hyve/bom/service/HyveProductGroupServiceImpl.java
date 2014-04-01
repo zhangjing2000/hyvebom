@@ -26,6 +26,7 @@ public class HyveProductGroupServiceImpl implements HyveProductGroupService {
 	//private boolean printTrace = false;
 	public LoggedHyveProductGroup createHyveProductGroupLog(int entryID, Date entryDate, String comment,
 			GroupType groupType, String groupName) {
+		System.out.println("create new group" + groupName);
 		LoggedHyveProductGroup groupLog = new HyveProductGroupLog(entryID, entryDate, comment, groupType, groupName);
 		groupLogs.put(groupLog.getGroupID(), groupLog);
 		return groupLog;

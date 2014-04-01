@@ -8,35 +8,39 @@ import java.util.Map;
 import org.optaplanner.core.api.score.buildin.hardsoft.HardSoftScore;
 import org.optaplanner.core.impl.score.director.simple.SimpleScoreCalculator;
 
+import com.hyve.bom.concept.MemberType;
 import com.hyve.plan.concept.HyvePlant;
 import com.hyve.plan.mrp.MRPEntry;
 
 public class HyveMPSReadinessScoreCalculator implements SimpleScoreCalculator<MPSReadinessCheckSolution>{
 
-	private int hardScore = 0;
-	private int softScore = 0;
 	public HardSoftScore calculateScore(MPSReadinessCheckSolution solution) {
-		Map<HyvePlant, Map<Date, List<? extends FixedPlanEntry>>> fulfilled = solution.getFulfilledMPS();
-		Map<HyvePlant, Map<Date, List<MRPEntry>>> mrp = solution.getAccumulatedMRP();
-		for (Map.Entry<HyvePlant, Map<Date, List<? extends FixedPlanEntry>>> fulfilledByLocEntry: fulfilled.entrySet()) {
+		int  hardScore = 0, softScore = 0;
+		//System.out.println("calculateScore Called");
+		Map<HyvePlant, Map<Date, List<FixedPlanEntry>>> fulfilled = solution.getFulfilledMPS();
+		Map<PlanEntryIndex, MRPEntry> mrp = solution.getAccumulatedMRP();
+		for (Map.Entry<HyvePlant, Map<Date, List<FixedPlanEntry>>> fulfilledByLocEntry: fulfilled.entrySet()) {
 			HyvePlant fulfilledLoc = fulfilledByLocEntry.getKey();
-			Map<Date, List<? extends FixedPlanEntry>> fulfilledByLoc = fulfilledByLocEntry.getValue();
-			Map<Date, List<MRPEntry>> mrpByLoc = mrp.get(fulfilledLoc);
-			if ((mrpByLoc == null || mrpByLoc.size() == 0) && !fulfilledByLoc.isEmpty()) {
-				hardScore += hardScore - 10000;
-				continue;
-			}
-			for (Map.Entry<Date, List<? extends FixedPlanEntry>> fulfilledByDateEntry: fulfilledByLoc.entrySet()) {
+			Map<Date, List<FixedPlanEntry>> fulfilledByLoc = fulfilledByLocEntry.getValue();
+			for (Map.Entry<Date, List<FixedPlanEntry>> fulfilledByDateEntry: fulfilledByLoc.entrySet()) {
 				Date fulfilledDate = fulfilledByDateEntry.getKey();
-				List<? extends FixedPlanEntry> fulfilledPlan = fulfilledByDateEntry.getValue();
-				Map<Integer, MRPEntry> mrpPlan = findMRPSupportByFulfilledDate(mrpByLoc, fulfilledDate);
+				List<FixedPlanEntry> fulfilledPlan = fulfilledByDateEntry.getValue();
+				Map<Integer, MRPEntry> mrpPlan = findMRPSupportByFulfilledDate(mrp, fulfilledLoc, fulfilledDate);
 				if (mrpPlan == null) {
-					hardScore += hardScore - 10000;
+					hardScore -= 10;
 					continue;
 				}
 				Map<Integer, Integer> skuDemands = accumulateDemandBySKU(fulfilledPlan);
 				for (Map.Entry<Integer, Integer> skuDemand: skuDemands.entrySet()) {
+					if (skuDemand.getValue() == 0) {
+						hardScore++;
+						continue;
+					}
 					MRPEntry mrpEntry = mrpPlan.get(skuDemand.getKey());
+					if (mrpEntry == null) {
+						hardScore-=10;
+						continue;
+					}
 					if (mrpEntry.getPlanQty() >= skuDemand.getValue()) 
 						hardScore++;
 					else 
@@ -44,14 +48,18 @@ public class HyveMPSReadinessScoreCalculator implements SimpleScoreCalculator<MP
 				}
 			}
 		}
+		System.out.println("calculateScore Called, hardscore=" + hardScore);
 		return HardSoftScore.valueOf(hardScore, softScore);
 	}
+	
 	private Map<Integer, Integer> accumulateDemandBySKU(
-			List<? extends FixedPlanEntry> fulfilledPlan) {
+			List<FixedPlanEntry> fulfilledPlan) {
 		Map <Integer, Integer> skuDemand = new HashMap<Integer, Integer>();
 		for (FixedPlanEntry fixedPlanEntry: fulfilledPlan) {
-			if (fixedPlanEntry.getItemType() != FulfilledItemType.MATERIAL) {
-				int fulfilledQty = skuDemand.get(fixedPlanEntry.getSkuNo());
+			if (fixedPlanEntry.getItemType() == MemberType.MATERIAL) {
+				System.out.println("accoumulateDemandBySKU" + fixedPlanEntry);
+				Integer fulfilledQty = skuDemand.get(fixedPlanEntry.getSkuNo());
+				if (fulfilledQty == null) fulfilledQty = 0;
 				fulfilledQty += fixedPlanEntry.getFulfilledQty();
 				skuDemand.put(fixedPlanEntry.getSkuNo(), fulfilledQty);
 			}
@@ -60,19 +68,13 @@ public class HyveMPSReadinessScoreCalculator implements SimpleScoreCalculator<MP
 	}
 	
 	private Map<Integer, MRPEntry> findMRPSupportByFulfilledDate(
-			Map<Date, List<MRPEntry>> mrpByLoc, Date fulfilledDate) {
-		List<MRPEntry> mrpPlan = null;
-		Date mrpDate = null;
-		for (Map.Entry<Date, List<MRPEntry>> mrpByDateEntry: mrpByLoc.entrySet()) {
-			Date thisMRPDate = mrpByDateEntry.getKey();
-			List<MRPEntry> mrpByDate = mrpByDateEntry.getValue();
-			if (thisMRPDate.after(fulfilledDate) || mrpDate != null && mrpDate.after(thisMRPDate)) continue;
-			mrpPlan = mrpByDate;
-			mrpDate = thisMRPDate;
-		}
+			Map<PlanEntryIndex, MRPEntry> mrp, HyvePlant plant, Date fulfilledDate) {
 		Map<Integer, MRPEntry> mrpSkuMap = new HashMap<Integer, MRPEntry>();
-		if (mrpPlan == null) return mrpSkuMap;
-		for (MRPEntry mrpEntry:mrpPlan) {
+		for (MRPEntry mrpEntry: mrp.values()) {
+			HyvePlant thisMRPPlant = mrpEntry.getPlanLocation();
+			if (!thisMRPPlant.equals(plant)) continue;
+			Date thisMRPDate = mrpEntry.getPlanDate();
+			if (thisMRPDate.after(fulfilledDate)) continue;
 			MRPEntry skuMRPEntry = mrpSkuMap.get(mrpEntry.getSkuNo());
 			if (skuMRPEntry == null) {
 				skuMRPEntry = mrpEntry;

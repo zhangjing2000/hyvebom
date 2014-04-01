@@ -51,7 +51,7 @@ public abstract class LoggedHyvePlanImpl<T extends PlanEntry> implements LoggedH
 	}
 
 	public void updatePlanEntry(T planEntry, LogEntry logEntry) {
-		PlanEntryLog<T> planEntryLog = newPlanEntryLog(PlanEntryLogType.DELETE_ENTRY, planEntry, logEntry); 
+		PlanEntryLog<T> planEntryLog = newPlanEntryLog(PlanEntryLogType.UPDATE_ENTRY, planEntry, logEntry); 
 		logs.add(planEntryLog);
 	}
 	

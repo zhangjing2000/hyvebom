@@ -60,7 +60,10 @@ public class MRPEntry implements PlanEntry {
 				return false;
 		} else if (!planRecDate.equals(other.planRecDate))
 			return false;
-		if (planLocation != other.planLocation)
+		if (planLocation == null) {
+			if (other.planLocation != null)
+				return false;
+		} else if (!planLocation.equals(other.planLocation))
 			return false;
 		return true;
 	}
