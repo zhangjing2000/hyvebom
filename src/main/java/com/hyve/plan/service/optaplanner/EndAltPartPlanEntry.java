@@ -33,12 +33,12 @@ public class EndAltPartPlanEntry extends FixedPlanEntry {
 
 	@Override
 	public String toString() {
-		return "FulfilledPlanEntry [fulfilledQty=" + getFulfilledQty()
-				+ ", getItemType()=" + getItemType() + ", getGroupID()="
-				+ getGroupID() + ", getSkuNo()=" + getSkuNo()
-				+ ", getPlanDate()=" + getPlanDate() + ", getPlanLocation()="
-				+ getPlanLocation() + ", getBomQty()=" + getBomQty()
-				+ ", getPlanQty()=" + getPlanQty() + "]";
+		return "EndAltPartPlanEntry [fulfilledQty=" + getFulfilledQty()
+				+ ", itemType=" + getItemType() + ", groupID="
+				+ getGroupID() + ", skuNo=" + getSkuNo()
+				+ ", planDate=" + getPlanDate() + ", plant="
+				+ getPlanLocation() + ", bomQty=" + getBomQty()
+				+ ", planQty=" + getPlanQty() + "]";
 	}
 
 }

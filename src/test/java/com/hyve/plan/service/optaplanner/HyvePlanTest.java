@@ -213,7 +213,7 @@ public class HyvePlanTest {
 	public void tearDown() throws Exception {
 	}
 
-	private HyvePlan<MPSEntry> init1RackMPS() {
+	private HyvePlan<MPSEntry> init1ChassisMPS() {
 		LoggedContractMPSImpl mps = new LoggedContractMPSImpl(contract);
 		HyveProductGroup chassis = initAChassisBOM();
 		MPSEntry planEntry;
@@ -227,7 +227,48 @@ public class HyvePlanTest {
 		return mps;
 	}
 	
-	private HyvePlan<MRPEntry> init1RackMRP() {
+	private HyvePlan<MRPEntry> init1ChassisMRP() {
+		LoggedContractMRPImpl mrp = new LoggedContractMRPImpl(contract);
+		try {
+			MRPEntry screwPlanEntry = new MRPEntry(sdf.parse("01/02/2014"),  plant,5, screwAltPart2);
+			MRPEntry powerPlanEntry = new MRPEntry(sdf.parse("01/02/2014"),  plant, 10, powerPart);
+			mrp.addPlanEntry(screwPlanEntry, logEntry);
+			mrp.addPlanEntry(powerPlanEntry, logEntry);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return mrp;
+	}
+	
+	@Test
+	public void test1ChassisMPS() {
+		HyvePlan<MPSEntry> mps = init1ChassisMPS();
+		HyvePlan<MRPEntry> mrp = init1ChassisMRP();
+		MPSReadinessCheckSolution unsolvedSolution = new MPSReadinessCheckSolution(mps, mrp, bomService);
+		solver.solve(unsolvedSolution);
+		MPSReadinessCheckSolution solvedSolution = (MPSReadinessCheckSolution)solver.getBestSolution();
+		assertNotNull(solvedSolution);
+		System.out.println("score=" + solvedSolution.getScore().getHardScore());
+		assertTrue(solvedSolution.getScore().getHardScore() > 0);
+	}
+
+	private HyvePlan<MPSEntry> init2ChassisMPS() {
+		LoggedContractMPSImpl mps = new LoggedContractMPSImpl(contract);
+		HyveProductGroup chassis = initAChassisBOM();
+		MPSEntry planEntry;
+		try {
+			planEntry = new MPSEntry(sdf.parse("01/02/2014"), sdf.parse("01/03/2014"), plant, 1, chassis.getGroupID());
+			mps.addPlanEntry(planEntry, logEntry);
+			planEntry = new MPSEntry(sdf.parse("01/05/2014"), sdf.parse("01/06/2014"), plant, 2, chassis.getGroupID());
+			mps.addPlanEntry(planEntry, logEntry);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
+		return mps;
+	}
+	
+	private HyvePlan<MRPEntry> init2ChassisMRP() {
 		LoggedContractMRPImpl mrp = new LoggedContractMRPImpl(contract);
 		try {
 			MRPEntry screwPlanEntry = new MRPEntry(sdf.parse("01/02/2014"),  plant, 10, screwAltPart2);
@@ -237,14 +278,13 @@ public class HyvePlanTest {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		
 		return mrp;
 	}
 	
 	@Test
-	public void test1RackMPS() {
-		HyvePlan<MPSEntry> mps = init1RackMPS();
-		HyvePlan<MRPEntry> mrp = init1RackMRP();
+	public void test2ChassisMPS() {
+		HyvePlan<MPSEntry> mps = init2ChassisMPS();
+		HyvePlan<MRPEntry> mrp = init2ChassisMRP();
 		MPSReadinessCheckSolution unsolvedSolution = new MPSReadinessCheckSolution(mps, mrp, bomService);
 		solver.solve(unsolvedSolution);
 		MPSReadinessCheckSolution solvedSolution = (MPSReadinessCheckSolution)solver.getBestSolution();

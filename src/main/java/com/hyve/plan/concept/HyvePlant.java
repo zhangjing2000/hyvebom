@@ -47,4 +47,9 @@ public class HyvePlant implements Serializable, Comparable<HyvePlant>  {
 			return false;
 		return true;
 	}
+	@Override
+	public String toString() {
+		return "HyvePlant [locNo=" + locNo + ", name=" + name
+				+ ", countryCode=" + countryCode + "]";
+	}
 }

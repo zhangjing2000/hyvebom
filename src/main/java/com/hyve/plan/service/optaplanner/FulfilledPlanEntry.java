@@ -50,11 +50,11 @@ public class FulfilledPlanEntry extends FixedPlanEntry {
 	@Override 
 	public String toString() {
 		return "FulfilledPlanEntry [fulfilledQty=" + fulfilledQty
-				+ ", getItemType()=" + getItemType() + ", getGroupID()="
-				+ getGroupID() + ", getSkuNo()=" + getSkuNo()
-				+ ", getPlanDate()=" + getPlanDate() + ", getPlanLocation()="
-				+ getPlanLocation() + ", getBomQty()=" + getBomQty()
-				+ ", getPlanQty()=" + getPlanQty() + "]";
+				+ ", itemType=" + getItemType() + ", groupID="
+				+ getGroupID() + ", skuNo=" + getSkuNo()
+				+ ", planDate=" + getPlanDate() + ", plant="
+				+ getPlanLocation() + ", bomQty=" + getBomQty()
+				+ ", planQty=" + getPlanQty() + "]";
 	}
 	
 }

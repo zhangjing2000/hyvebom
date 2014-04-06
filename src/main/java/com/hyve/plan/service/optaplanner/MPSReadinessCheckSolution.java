@@ -71,7 +71,8 @@ public class MPSReadinessCheckSolution implements Solution<HardSoftScore> {
 			fulfilledByDate = new ArrayList<FixedPlanEntry>();
 			fulfilledByPlant.put(fulfilledDate, fulfilledByDate);
 		}
-		
+		// each node in a bom should have a record in the fulfilledByDate. 
+		// Two nodes with same sku or sub bom but different parent are treated as different node, each should have a record 
 		if (!fulfilledByDate.contains(fixedPlanEntry)) {
 			fulfilledByDate.add(fixedPlanEntry);
 		}

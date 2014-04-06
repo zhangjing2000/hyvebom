@@ -67,4 +67,11 @@ public class MRPEntry implements PlanEntry {
 			return false;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "MRPEntry [planRecDate=" + planRecDate + ", planLocation="
+				+ planLocation + ", planRecQty=" + planRecQty + ", skuNo="
+				+ skuNo + "]";
+	}
 }

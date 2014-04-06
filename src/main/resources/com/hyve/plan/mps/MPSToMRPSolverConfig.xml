@@ -18,7 +18,9 @@
   <!-- Optimization algorithms configuration -->
 
   <termination>
+    <terminationCompositionStyle>OR</terminationCompositionStyle>
     <bestScoreLimit>0hard/-20000soft</bestScoreLimit>
+    <unimprovedSecondsSpentLimit>10</unimprovedSecondsSpentLimit>
   </termination>
 
   <constructionHeuristic>
